@@ -1,0 +1,63 @@
+.full-page {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(https://compre.arcom.com.br/imagens/produtos/background_trucks.jpg);
+}
+
+.full-page-transparency {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background: #00000050;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.logo {
+    text-align: center;
+}
+
+.login___btn{
+    width: 100%;
+}
+
+.btn { 
+    margin-top:30;
+    color: #028743;
+    border-color: #028743;
+}
+
+.text-click {
+    text-align: center;
+    font-weight: 300;
+    display: block;
+}
+
+.login___esqueci-senha{
+    margin-top: 10px;
+    float: right;
+}
+
+.title_redirect_browser{
+    text-align: center;
+    color: #FFA500;
+}
+
+@media (max-width: 900px) {
+    .full-page-transparency {
+        justify-content: center;
+        flex-direction: column;
+        padding-right: 0px;
+    }   
+}
