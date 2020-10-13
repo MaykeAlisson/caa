@@ -51,9 +51,9 @@ module.exports = {
         }),
         new WebpackPwaManifest({
             filename: 'manifest.json',
-            name: 'Novo Anjo',
-            short_name: 'Novo Anjo',
-            description: 'Novo Anjo Web App!',
+            name: 'CAA',
+            short_name: 'CAA',
+            description: 'Centro Admin Arcom!',
             display: 'standalone',
             orientation: 'portrait',
             start_url: '/',
