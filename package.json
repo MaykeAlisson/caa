@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server  --https --cert /home/mayke/example.com+5.pem --key /home/mayke/example.com+5-key.pem --open --config webpack.dev.js",
+    "start": "webpack-dev-server  --https --cert /home/mayke/example.com+5.pem --key /home/mayke/example.com+5-key.pem --host 0.0.0.0 --open --config webpack.dev.js",
     "build": "webpack --mode production --config  webpack.prod.js",
     "analyse": "node webpack.analyse.js"
   },

@@ -5,6 +5,22 @@ import Button from "@material-ui/core/Button";
 import {useEffect} from "react";
 import isEmpty from "../../infra/util/isEmpty";
 
+// video constraints
+const constraints = {
+    video: {
+        width: {
+            min: 100,
+            ideal: 300,
+            max: 400,
+        },
+        height: {
+            min: 100,
+            ideal: 300,
+            max: 400,
+        },
+    },
+};
+
 const Page = () => {
 
 
@@ -47,11 +63,6 @@ const Page = () => {
     }
 
     var handleSuccess = function (stream) {
-        if (!isEmpty(openCamera)){
-            openCamera.forEach(function (track) {
-                track.stop()
-            });
-        }
         var player = document.getElementById('player');
         player.style.display = "block";
         // Attach the video stream to the video element and autoplay.
@@ -66,17 +77,46 @@ const Page = () => {
         var context = snapshot.getContext('2d');
         context.drawImage(player, 0, 0, snapshotCanvas.width,
             snapshotCanvas.height);
-        openCamera.forEach(function (track) {
-            track.stop()
-        });
+        // openCamera.forEach(function (track) {
+        //     track.stop()
+        // });
+        stopVideoStream()
         player.style.display = "none";
     }
+
+
+    // stop video stream
+    function stopVideoStream() {
+        if (openCamera) {
+            openCamera.getTracks().forEach((track) => {
+                track.stop();
+            });
+        }
+    }
+
+    // initialize
+    async function initializeCamera() {
+        stopVideoStream();
+        constraints.video.facingMode = useFrontCamera ? "user" : "environment";
+
+        try {
+            let videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+            var player = document.getElementById('player');
+            player.style.display = "block";
+            // Attach the video stream to the video element and autoplay.
+            player.srcObject = videoStream;
+            setOpenCamera(videoStream)
+        } catch (err) {
+            alert("Could not access the camera");
+        }
+    }
+
 
     return (
         <>
             <Button
                 style={{display: exibirBtnCamera}}
-                onClick={solicitaAcesso}
+                onClick={initializeCamera}
             >Tirar Foto</Button>
             {/*<input*/}
             {/*    // accept="image/*"*/}
@@ -88,7 +128,7 @@ const Page = () => {
             {/*/>*/}
             <video style={{display: 'none' }} id="player" autoPlay
                    facingmode={useFrontCamera ? "user" : "environment"} ></video>
-            <Button onClick={() => {setUseFrontCamera(!useFrontCamera); handleSuccess}}>Girar Camera</Button>
+            <Button onClick={() => {setUseFrontCamera(!useFrontCamera); initializeCamera();}}>Girar Camera</Button>
             <Button onClick={captura}>Captura</Button>
             <canvas id="snapshot" style={{width: '320', height: '240'}}></canvas>
             <img id='image' src={img}/>
