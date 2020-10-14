@@ -8,7 +8,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import PostoAbastecimentoContext from 'Context/postoAbastecimento';
+import PostoAbastecimentoContext from 'Contexts/postoAbastecimento';
 
 const Componente = props => {
 
