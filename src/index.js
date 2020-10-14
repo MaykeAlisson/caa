@@ -11,8 +11,10 @@ import App from './pages/App';
 import Routes from './routes';
 import registrarSW from './serviceWorker';
 import {LoadingProvider} from 'Contexts/loading';
-import Loading from 'Components/CustomLoading';
 import {MessageProvider} from 'Contexts/message';
+import {AbastecimentoProvider} from 'Contexts/abastecimento';
+import {PostoAbastecimentoProvider} from 'Contexts/postoAbastecimento';
+import Loading from 'Components/CustomLoading';
 
 
 registrarSW();
@@ -36,9 +38,13 @@ ReactDOM.render(
             <LoadingProvider>
                 <Loading>
                     <MessageProvider>
-                        <App>
-                            <Routes/>
-                        </App>
+                        <PostoAbastecimentoProvider>
+                            <AbastecimentoProvider>
+                                <App>
+                                    <Routes/>
+                                </App>
+                            </AbastecimentoProvider>
+                        </PostoAbastecimentoProvider>
                     </MessageProvider>
                 </Loading>
             </LoadingProvider>

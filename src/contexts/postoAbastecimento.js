@@ -3,14 +3,13 @@ import { createContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-import service from '@services';
-import getConnection from '@repository';
-import { findAll } from '@repository/PostoAbastecimento';
-import { save } from '@repository/PostoAbastecimento';
-import { deleteAll } from '@repository/PostoAbastecimento';
+import { Api } from 'Services/api';
+import getConnection from 'Repository';
+import { findAll } from 'Repository/PostoAbastecimento';
+import { save } from 'Repository/PostoAbastecimento';
+import { deleteAll } from 'Repository/PostoAbastecimento';
 
-
-const postoService = service.PostoService;
+const service = Api.PostoService;
 
 export const Context = createContext({
     postos: [],
@@ -31,7 +30,7 @@ export const PostoAbastecimentoProvider = ({ children }) => {
     const importar = () => {
         let postosAPI = [];
         Promise.all([
-            postoService.buscarTodos(),
+            service.buscarTodos(),
             getConnection().then(conn => findAll(conn))
         ])
         .then(postos => {

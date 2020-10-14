@@ -3,8 +3,8 @@ import { createContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-import getConnection from '@repository';
-import { findAll } from '@repository/Abastecimento';
+import getConnection from 'Repository';
+import { findAll } from 'Repository/Abastecimento';
 
 export const Context = createContext({
     abastecimentos: []

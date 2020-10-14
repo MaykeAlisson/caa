@@ -1,4 +1,4 @@
-import { convFormatISO } from '@utils/date';
+import { convFormatISO } from 'Util/Date';
 
 const STORE = 'abastecimento';
 
