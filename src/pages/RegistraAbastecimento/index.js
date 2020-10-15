@@ -20,7 +20,9 @@ import {save} from 'Repository/Abastecimento';
 import getConnection from 'Repository';
 import Menu from './components/Menu';
 import PostoContext from 'Contexts/postoAbastecimento';
-import isEmpty from "../../infra/util/isEmpty";
+import { Api } from 'Services/api';
+
+const service = Api.AbastecimentoService;
 
 
 const INITIAL_VALUE = {
@@ -52,6 +54,7 @@ const Componente = () => {
 
     const [abastecimento, setAbastecimento] = useState(INITIAL_VALUE);
     const {importar} = useContext(PostoContext);
+    const [img, setImg] = useState(null);
 
     const inputRefKM = useRef(null);
     const [openCamera, setOpenCamera] = useState('');
@@ -111,6 +114,7 @@ const Componente = () => {
         //     track.stop()
         // });
         stopVideoStream()
+        setImg(snapshotCanvas.toDataURL());
         setExibirBtn(false);
         player.style.display = "none";
     }
@@ -118,6 +122,18 @@ const Componente = () => {
     const girarCamera = () => {
         setUseFrontCamera(!useFrontCamera);
         initializeCamera();
+    }
+
+    const testaEnvio =  async () => {
+        const formData = new FormData();
+        formData.append('slip', img);
+        formData.append("cpf", '1234567890'); // cpf junto ao formData.
+
+        try {
+           let resultado = await service.registrar(formData);
+        }catch (e) {
+            console.log(e)
+        }
     }
 
     const classes = useStyles();
@@ -213,6 +229,7 @@ const Componente = () => {
                     type='submit'
                     variant='contained'
                     color='primary'
+                    onClick={testaEnvio}
                 >
                     Registrar
                 </Button>

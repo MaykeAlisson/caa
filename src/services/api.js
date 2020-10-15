@@ -1,6 +1,7 @@
 import http from './clientHttp';
 
 const urlLoginV3 = '/api/seguranca/v3/login/b2b';
+const urlRegistro = '/api/teste/img';
 
 export const Api = {
 
@@ -26,6 +27,11 @@ export const Api = {
 
     AbastecimentoService: {
         // Simular API!!
-        enviar: abastecimentos => new Promise((resolve) => resolve())
+        enviar: abastecimentos => new Promise((resolve) => resolve()),
+
+        registrar: (formData) => http.post(urlRegistro, formData, {
+            headers: {
+                "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+            }}),
     }
 };

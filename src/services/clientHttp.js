@@ -5,7 +5,7 @@ const baseURL = () => {
     if (process.env.NODE_ENV === 'production')
         return 'https://cdn01.arcom.com.br';
     const os = require('os');
-    return `http://${os.hostname()}:6030`;
+    return `http://${os.hostname()}:3000`;
 };
 
 const clientHttp = axios.create({
