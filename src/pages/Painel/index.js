@@ -55,22 +55,6 @@ const Page = () => {
         setImg(URL.createObjectURL(myFile));
     }
 
-    const solicitaAcesso = () => {
-        navigator.mediaDevices.getUserMedia({video: true})
-            .then(handleSuccess).catch(function(error) {
-            alert('Incapaz de acessar a câmera');
-            console.error('Error occurred : ', error);});
-    }
-
-    var handleSuccess = function (stream) {
-        var player = document.getElementById('player');
-        player.style.display = "block";
-        // Attach the video stream to the video element and autoplay.
-        player.srcObject = stream;
-        setOpenCamera(stream.getVideoTracks());
-
-    };
-
     const captura = () => {
         var player = document.getElementById('player');
         var snapshotCanvas = document.getElementById('snapshot');
@@ -127,10 +111,10 @@ const Page = () => {
             {/*    capture*/}
             {/*/>*/}
             <video style={{display: 'none' }} id="player" autoPlay
-                   facingmode={useFrontCamera ? "user" : "environment"} ></video>
+                    ></video>
             <Button onClick={() => {setUseFrontCamera(!useFrontCamera); initializeCamera();}}>Girar Camera</Button>
             <Button onClick={captura}>Captura</Button>
-            <canvas id="snapshot" style={{width: '320', height: '240'}}></canvas>
+            <canvas id="snapshot" style={{width: '320', height: '320'}}></canvas>
             <img id='image' src={img}/>
         </>
     );
