@@ -36,12 +36,12 @@ const INITIAL_VALUE = {
 const constraints = {
     video: {
         width: {
-            min: 100,
+            min: 200,
             ideal: 300,
             max: 400,
         },
         height: {
-            min: 100,
+            min: 200,
             ideal: 300,
             max: 400,
         },
@@ -146,7 +146,9 @@ const Componente = () => {
             >
                 <CameraIcon/>
             </Button>
-            <video style={{display: 'none'}} id="player" autoPlay></video>
+            <div className={classes.containerCamera}>
+                <video style={{display: 'none'}} id="player" autoPlay></video>
+            </div>
             <form
                 className={classes.root}
                 autoComplete='off'
@@ -206,7 +208,7 @@ const Componente = () => {
                     required
                     InputProps={{inputComponent: NumberFormat}}
                 />
-                <canvas id="snapshot" style={{display: 'none', width: '320', height: '320'}}></canvas>
+                <canvas id="snapshot" style={{display: 'none', width: '350', height: '350'}}></canvas>
                 <Button
                     type='submit'
                     variant='contained'

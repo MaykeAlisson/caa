@@ -4,5 +4,11 @@ export default makeStyles({
     root: {
         display: 'flex',
         flexDirection: 'column'
+    },
+    containerCamera: {
+         display: 'flex',
+         flexDirection: 'row',
+         justifyContent: 'center',
+         alignItems: 'center'
     }
 });
