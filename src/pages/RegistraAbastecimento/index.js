@@ -56,6 +56,7 @@ const Componente = () => {
     const inputRefKM = useRef(null);
     const [openCamera, setOpenCamera] = useState('');
     const [useFrontCamera, setUseFrontCamera] = useState(true);
+    const [exibirBtn, setExibirBtn] = useState(false);
 
     useEffect(() => setFocus(), []);
 
@@ -84,6 +85,7 @@ const Componente = () => {
             // Attach the video stream to the video element and autoplay.
             player.srcObject = videoStream;
             setOpenCamera(videoStream)
+            setExibirBtn(true);
         } catch (err) {
             alert("Could not access the camera");
         }
@@ -109,6 +111,7 @@ const Componente = () => {
         //     track.stop()
         // });
         stopVideoStream()
+        setExibirBtn(false);
         player.style.display = "none";
     }
 
@@ -126,17 +129,19 @@ const Componente = () => {
                     importar();
                 }}
             />
-            <Button onClick={initializeCamera}>
+            <Button
+                style={exibirBtn ? {display: 'none'} : {display: 'inline-block'}}
+                onClick={initializeCamera}>
                 <AddAPhotoIcon/>
             </Button>
             <Button
-                style={isEmpty(openCamera) ? {display: 'none'} : {display: 'block'}}
+                style={exibirBtn ? {display: 'inline-block'} : {display: 'none'}}
                 onClick={girarCamera}
             >
                 <FlipCameraAndroidIcon/>
             </Button>
             <Button
-                style={isEmpty(openCamera) ? {display: 'none'} : {display: 'block'}}
+                style={exibirBtn ? {display: 'inline-block'} : {display: 'none'}}
                 onClick={captura}
             >
                 <CameraIcon/>
