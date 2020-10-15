@@ -10,5 +10,18 @@ export default makeStyles({
          flexDirection: 'row',
          justifyContent: 'center',
          alignItems: 'center'
+    },
+    containerCanvas: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '10px',
+        marginBottom: '10px'
+    },
+    canvasImg: {
+        maxWidth: '300px',
+        maxHeight: '300px',
+        display: 'none'
     }
 });

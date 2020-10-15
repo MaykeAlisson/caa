@@ -114,7 +114,12 @@ const Componente = () => {
         //     track.stop()
         // });
         stopVideoStream()
-        setImg(snapshotCanvas.toDataURL());
+        snapshotCanvas.toBlob(function(blob){
+            // link.href = URL.createObjectURL(blob);
+            setImg(blob);
+            console.log(blob);
+        },'image/png');
+        // setImg(snapshotCanvas.toBlob);
         setExibirBtn(false);
         player.style.display = "none";
     }
@@ -126,7 +131,7 @@ const Componente = () => {
 
     const testaEnvio =  async () => {
         const formData = new FormData();
-        formData.append('slip', img);
+        formData.append('slip', img, 'slip_cpf.png');
         formData.append("cpf", '1234567890'); // cpf junto ao formData.
 
         try {
@@ -224,7 +229,9 @@ const Componente = () => {
                     required
                     InputProps={{inputComponent: NumberFormat}}
                 />
-                <canvas id="snapshot" style={{display: 'none', width: '350', height: '350'}}></canvas>
+                <div className={classes.containerCanvas}>
+                <canvas id="snapshot" className={classes.canvasImg}></canvas>
+                </div>
                 <Button
                     type='submit'
                     variant='contained'
