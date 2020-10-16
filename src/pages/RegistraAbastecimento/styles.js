@@ -23,5 +23,9 @@ export default makeStyles({
         maxWidth: '300px',
         maxHeight: '300px',
         display: 'none'
+    },
+    imgAnexo: {
+        maxWidth: '300px',
+        maxHeight: '300px',
     }
 });

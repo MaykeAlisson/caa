@@ -31,7 +31,7 @@ const Componente = ({
         }
 
         navigator.serviceWorker.ready
-            .then(registration => registration.sync.register('syncAttendees'))
+            .then(registration => registration.sync.register('caaSync'))
             .then(() => console.log("Registered background sync"))
             .catch(err => console.error("Error registering background sync", err))
     }

@@ -12,10 +12,10 @@ export default () => {
         )
     );
 
-    if (isLocalhost) {
-        console.log('Localhost - Não registra ServiceWorker');
-        return;
-    }
+    // if (isLocalhost) {
+    //     console.log('Localhost - Não registra ServiceWorker');
+    //     return;
+    // }
 
     if ('serviceWorker' in navigator) {
 

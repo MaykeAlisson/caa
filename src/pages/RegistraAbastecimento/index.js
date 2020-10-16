@@ -137,7 +137,6 @@ const Componente = () => {
         }
 
         const carregaImg = () => {
-            alert('carregando');
 
             const filePicker = document.querySelector('input');
 
@@ -152,7 +151,7 @@ const Componente = () => {
                 return;
             }
 
-            var imgElement = document.getElementById('image');
+            var imgElement = document.getElementById('imageAnexo');
             imgElement.style.display = "block";
             imgElement.src = URL.createObjectURL(myFile);
             setImg(myFile)
@@ -265,7 +264,7 @@ const Componente = () => {
                     />
                     <div className={classes.containerCanvas}>
                         <canvas id="snapshot" className={classes.canvasImg}></canvas>
-                        <img id='image' className={classes.canvasImg} src={img}/>
+                        <img id='imageAnexo' className={classes.imgAnexo} />
                     </div>
                     <Button
                         type='submit'
