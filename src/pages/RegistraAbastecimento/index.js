@@ -11,6 +11,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import FlipCameraAndroidIcon from '@material-ui/icons/FlipCameraAndroid';
 import CameraIcon from '@material-ui/icons/Camera';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import useStyles from './styles';
 import SelectPosto from 'Commons/SelectPosto';
@@ -20,7 +21,7 @@ import {save} from 'Repository/Abastecimento';
 import getConnection from 'Repository';
 import Menu from './components/Menu';
 import PostoContext from 'Contexts/postoAbastecimento';
-import { Api } from 'Services/api';
+import {Api} from 'Services/api';
 
 const service = Api.AbastecimentoService;
 
@@ -52,198 +53,239 @@ const constraints = {
 
 const Componente = () => {
 
-    const [abastecimento, setAbastecimento] = useState(INITIAL_VALUE);
-    const {importar} = useContext(PostoContext);
-    const [img, setImg] = useState(null);
+        const [abastecimento, setAbastecimento] = useState(INITIAL_VALUE);
+        const {importar} = useContext(PostoContext);
+        const [img, setImg] = useState(null);
 
-    const inputRefKM = useRef(null);
-    const [openCamera, setOpenCamera] = useState('');
-    const [useFrontCamera, setUseFrontCamera] = useState(true);
-    const [exibirBtn, setExibirBtn] = useState(false);
+        const inputRefKM = useRef(null);
+        const [openCamera, setOpenCamera] = useState('');
+        const [useFrontCamera, setUseFrontCamera] = useState(true);
+        const [exibirBtn, setExibirBtn] = useState(false);
 
-    useEffect(() => setFocus(), []);
+        useEffect(() => setFocus(), []);
 
-    const setFocus = () => {
-        setTimeout(() => {
-            if (inputRefKM.current) inputRefKM.current.focus();
-        }, 300);
-    };
+        const setFocus = () => {
+            setTimeout(() => {
+                if (inputRefKM.current) inputRefKM.current.focus();
+            }, 300);
+        };
 
-    const setValue = ({target}) => setAbastecimento({...abastecimento, [target.name]: target.value});
+        const setValue = ({target}) => setAbastecimento({...abastecimento, [target.name]: target.value});
 
-    const reset = () => {
-        setAbastecimento(INITIAL_VALUE);
-        setFocus();
-    };
+        const reset = () => {
+            setAbastecimento(INITIAL_VALUE);
+            setFocus();
+        };
 
-    // initialize
-    async function initializeCamera() {
-        stopVideoStream();
-        constraints.video.facingMode = useFrontCamera ? "user" : "environment";
+        // initialize
+        async function initializeCamera() {
+            stopVideoStream();
+            constraints.video.facingMode = useFrontCamera ? "user" : "environment";
 
-        try {
-            let videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+            try {
+                let videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                var player = document.getElementById('player');
+                player.style.display = "block";
+                // Attach the video stream to the video element and autoplay.
+                player.srcObject = videoStream;
+                setOpenCamera(videoStream)
+                setExibirBtn(true);
+            } catch (err) {
+                alert("Could not access the camera");
+            }
+        }
+
+        // stop video stream
+        function stopVideoStream() {
+            if (openCamera) {
+                openCamera.getTracks().forEach((track) => {
+                    track.stop();
+                });
+            }
+        }
+
+        const captura = () => {
             var player = document.getElementById('player');
-            player.style.display = "block";
-            // Attach the video stream to the video element and autoplay.
-            player.srcObject = videoStream;
-            setOpenCamera(videoStream)
-            setExibirBtn(true);
-        } catch (err) {
-            alert("Could not access the camera");
+            var snapshotCanvas = document.getElementById('snapshot');
+            snapshotCanvas.style.display = "block";
+            var context = snapshot.getContext('2d');
+            context.drawImage(player, 0, 0, snapshotCanvas.width,
+                snapshotCanvas.height);
+            stopVideoStream()
+            snapshotCanvas.toBlob(function (blob) {
+                setImg(blob);
+            }, 'image/png');
+            setExibirBtn(false);
+            player.style.display = "none";
         }
-    }
 
-    // stop video stream
-    function stopVideoStream() {
-        if (openCamera) {
-            openCamera.getTracks().forEach((track) => {
-                track.stop();
-            });
+        const girarCamera = () => {
+            setUseFrontCamera(!useFrontCamera);
+            initializeCamera();
         }
-    }
 
-    const captura = () => {
-        var player = document.getElementById('player');
-        var snapshotCanvas = document.getElementById('snapshot');
-        snapshotCanvas.style.display = "block";
-        var context = snapshot.getContext('2d');
-        context.drawImage(player, 0, 0, snapshotCanvas.width,
-            snapshotCanvas.height);
-        stopVideoStream()
-        snapshotCanvas.toBlob(function(blob){
-            setImg(blob);
-        },'image/png');
-        setExibirBtn(false);
-        player.style.display = "none";
-    }
+        const testaEnvio = async () => {
+            const formData = new FormData();
+            formData.append('slip', img, 'slip_cpf.png');
+            formData.append("cpf", '1234567890'); // cpf junto ao formData.
 
-    const girarCamera = () => {
-        setUseFrontCamera(!useFrontCamera);
-        initializeCamera();
-    }
-
-    const testaEnvio =  async () => {
-        const formData = new FormData();
-        formData.append('slip', img, 'slip_cpf.png');
-        formData.append("cpf", '1234567890'); // cpf junto ao formData.
-
-        try {
-           let resultado = await service.registrar(formData);
-        }catch (e) {
-            console.log(e)
+            try {
+                let resultado = await service.registrar(formData);
+            } catch (e) {
+                console.log(e)
+            }
         }
-    }
 
-    const classes = useStyles();
+        const carregaImg = () => {
+            alert('carregando');
 
-    return (
-        <>
-            <Menu
-                onClickImportarPostos={() => {
-                    importar();
-                }}
-            />
-            <Button
-                style={exibirBtn ? {display: 'none'} : {display: 'inline-block'}}
-                onClick={initializeCamera}>
-                <AddAPhotoIcon/>
-            </Button>
-            <Button
-                style={exibirBtn ? {display: 'inline-block'} : {display: 'none'}}
-                onClick={girarCamera}
-            >
-                <FlipCameraAndroidIcon/>
-            </Button>
-            <Button
-                style={exibirBtn ? {display: 'inline-block'} : {display: 'none'}}
-                onClick={captura}
-            >
-                <CameraIcon/>
-            </Button>
-            <div className={classes.containerCamera}>
-                <video style={{display: 'none'}} id="player" autoPlay></video>
-            </div>
-            <form
-                className={classes.root}
-                autoComplete='off'
-                onSubmit={e => {
-                    e.preventDefault();
-                    if (!abastecimento.idPosto) {
-                        alert('Favor informar o posto');
-                        return;
-                    }
-                    getConnection()
-                        .then(conn => save(conn, abastecimento))
-                        .then(() => {
-                            alert('Registro efeituado com sucesso');
-                            reset();
-                        })
-                        .catch(error => alert(error));
-                }}
-            >
-                <SelectPosto
-                    value={abastecimento.idPosto}
-                    onChange={idPosto => setAbastecimento({...abastecimento, idPosto})}
-                    required
+            const filePicker = document.querySelector('input');
+
+            if (!filePicker || !filePicker.files
+                || filePicker.files.length <= 0) {
+                return;
+            }
+            const myFile = filePicker.files[0];
+
+            if (myFile.size > 10485760) {
+                alert('Image is too big (max. 10 Mb)');
+                return;
+            }
+
+            var imgElement = document.getElementById('image');
+            imgElement.style.display = "block";
+            imgElement.src = URL.createObjectURL(myFile);
+            setImg(myFile)
+
+        }
+
+        const classes = useStyles();
+
+        return (
+            <>
+                <Menu
+                    onClickImportarPostos={() => {
+                        importar();
+                    }}
                 />
-                <TextField
-                    type='number'
-                    label='Km:'
-                    name='km'
-                    value={abastecimento.km}
-                    onChange={setValue}
-                    required
-                    inputRef={inputRefKM}
-                />
-                <TextField
-                    type='date'
-                    label='Data:'
-                    name='dia'
-                    value={abastecimento.dia}
-                    onChange={setValue}
-                    InputLabelProps={{shrink: true}}
-                    required
-                />
-                <TextField
-                    type='time'
-                    label='Hora:'
-                    name='hora'
-                    value={abastecimento.hora}
-                    onChange={setValue}
-                    InputLabelProps={{shrink: true}}
-                    InputProps={{step: 300}}
-                    required
-                />
-                <TextField
-                    label='Valor:'
-                    name='valor'
-                    value={abastecimento.valor}
-                    onChange={setValue}
-                    required
-                    InputProps={{inputComponent: NumberFormat}}
-                />
-                <div className={classes.containerCanvas}>
-                <canvas id="snapshot" className={classes.canvasImg}></canvas>
-                </div>
                 <Button
-                    type='submit'
-                    variant='contained'
-                    color='primary'
-                    onClick={testaEnvio}
-                >
-                    Registrar
+                    style={exibirBtn ? {display: 'none'} : {display: 'inline-block'}}
+                    onClick={initializeCamera}>
+                    <AddAPhotoIcon/>
                 </Button>
-                <Fab
-                    color='primary'
-                    aria-label='add'
-                    onClick={e => reset()}
+                <Button
+                    style={exibirBtn ? {display: 'inline-block'} : {display: 'none'}}
+                    onClick={girarCamera}
                 >
-                    <AddIcon/>
-                </Fab>
-            </form>
-        </>
-    );
-};
+                    <FlipCameraAndroidIcon/>
+                </Button>
+                <Button
+                    style={exibirBtn ? {display: 'inline-block'} : {display: 'none'}}
+                    onClick={captura}
+                >
+                    <CameraIcon/>
+                </Button>
+                <input
+                    accept="image/x-png,image/jpeg,image/gif"
+                    style={{display: 'none'}}
+                    id="contained-button-file"
+                    type="file"
+                    onChange={() => {
+                        carregaImg()
+                    }}
+                />
+                <label htmlFor="contained-button-file">
+                    <Button
+                        component="span"
+                    >
+                        <AttachFileIcon/>
+                    </Button>
+                </label>
+                <div className={classes.containerCamera}>
+                    <video style={{display: 'none'}} id="player" autoPlay></video>
+                </div>
+                <form
+                    className={classes.root}
+                    autoComplete='off'
+                    onSubmit={e => {
+                        e.preventDefault();
+                        if (!abastecimento.idPosto) {
+                            alert('Favor informar o posto');
+                            return;
+                        }
+                        getConnection()
+                            .then(conn => save(conn, abastecimento))
+                            .then(() => {
+                                alert('Registro efeituado com sucesso');
+                                reset();
+                            })
+                            .catch(error => alert(error));
+                    }}
+                >
+                    <SelectPosto
+                        value={abastecimento.idPosto}
+                        onChange={idPosto => setAbastecimento({...abastecimento, idPosto})}
+                        required
+                    />
+                    <TextField
+                        type='number'
+                        label='Km:'
+                        name='km'
+                        value={abastecimento.km}
+                        onChange={setValue}
+                        required
+                        inputRef={inputRefKM}
+                    />
+                    <TextField
+                        type='date'
+                        label='Data:'
+                        name='dia'
+                        value={abastecimento.dia}
+                        onChange={setValue}
+                        InputLabelProps={{shrink: true}}
+                        required
+                    />
+                    <TextField
+                        type='time'
+                        label='Hora:'
+                        name='hora'
+                        value={abastecimento.hora}
+                        onChange={setValue}
+                        InputLabelProps={{shrink: true}}
+                        InputProps={{step: 300}}
+                        required
+                    />
+                    <TextField
+                        label='Valor:'
+                        name='valor'
+                        value={abastecimento.valor}
+                        onChange={setValue}
+                        required
+                        InputProps={{inputComponent: NumberFormat}}
+                    />
+                    <div className={classes.containerCanvas}>
+                        <canvas id="snapshot" className={classes.canvasImg}></canvas>
+                        <img id='image' className={classes.canvasImg} src={img}/>
+                    </div>
+                    <Button
+                        type='submit'
+                        variant='contained'
+                        color='primary'
+                        onClick={testaEnvio}
+                    >
+                        Registrar
+                    </Button>
+                    <Fab
+                        color='primary'
+                        aria-label='add'
+                        onClick={e => reset()}
+                    >
+                        <AddIcon/>
+                    </Fab>
+                </form>
+            </>
+        );
+    }
+;
 
 export default Componente;
