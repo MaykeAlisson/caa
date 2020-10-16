@@ -18,10 +18,29 @@ const Componente = ({
     const {setLoading} = useContext(LoadingContext);
     const {msgErro} = useContext(MessageContext);
 
+    function registerNotification() {
+        Notification.requestPermission(permission => {
+            if (permission === 'granted'){ registerBackgroundSync() }
+            else console.error("CAA - Permission  notificação negada.")
+        })
+    }
+
+    function registerBackgroundSync() {
+        if (!navigator.serviceWorker){
+            return console.error("CAA - Service Worker not supported")
+        }
+
+        navigator.serviceWorker.ready
+            .then(registration => registration.sync.register('syncAttendees'))
+            .then(() => console.log("Registered background sync"))
+            .catch(err => console.error("Error registering background sync", err))
+    }
+
     return (
         <AppProvider>
             <BarraNavegacao onLogoutSuccess={onLogout} />
             <Container className={classes.pageContainer}>
+                <a onClick={registerNotification()}/>
                 <Routes/>
             </Container>
         </AppProvider>
