@@ -110,16 +110,10 @@ const Componente = () => {
         var context = snapshot.getContext('2d');
         context.drawImage(player, 0, 0, snapshotCanvas.width,
             snapshotCanvas.height);
-        // openCamera.forEach(function (track) {
-        //     track.stop()
-        // });
         stopVideoStream()
         snapshotCanvas.toBlob(function(blob){
-            // link.href = URL.createObjectURL(blob);
             setImg(blob);
-            console.log(blob);
         },'image/png');
-        // setImg(snapshotCanvas.toBlob);
         setExibirBtn(false);
         player.style.display = "none";
     }
