@@ -90,13 +90,14 @@ const Componente = () => {
             try {
                 let videoStream = await navigator.mediaDevices.getUserMedia(constraints);
                 let player = inputRefPlayer.current;
-                inputRefPlayer.style.display = "block";
+                inputRefPlayer.current.style.display = "block";
                 // Attach the video stream to the video element and autoplay.
                 player.srcObject = videoStream;
                 setOpenCamera(videoStream)
                 setExibirBtn(true);
             } catch (err) {
-                alert("Sem acesso a Camera");
+                alert(err)
+                // alert("Sem acesso a Camera");
             }
         }
 
@@ -111,16 +112,16 @@ const Componente = () => {
 
         const captura = () => {
             let player = inputRefPlayer.current;
-            inputRefSnapshot.style.display = "block";
+            inputRefSnapshot.current.style.display = "block";
             let context = snapshot.getContext('2d');
-            context.drawImage(player, 0, 0, inputRefSnapshot.width,
-                inputRefSnapshot.height);
+            context.drawImage(player, 0, 0, inputRefSnapshot.current.width,
+                inputRefSnapshot.current.height);
             stopVideoStream()
-            inputRefSnapshot.toBlob(function (blob) {
+            inputRefSnapshot.current.toBlob(function (blob) {
                 setImg(blob);
             }, 'image/png');
             setExibirBtn(false);
-            inputRefPlayer.style.display = "none";
+            inputRefPlayer.current.style.display = "none";
         }
 
         const girarCamera = () => {
@@ -143,15 +144,15 @@ const Componente = () => {
                 })
                 .catch(error => alert(error));
 
-            const formData = new FormData();
-            formData.append('slip', img, 'slip_cpf.png');
-            formData.append("cpf", '1234567890'); // cpf junto ao formData.
-
-            try {
-                let resultado = await service.registrar(formData);
-            } catch (e) {
-                console.log(e)
-            }
+            // const formData = new FormData();
+            // formData.append('slip', img, 'slip_cpf.png');
+            // formData.append("cpf", '1234567890'); // cpf junto ao formData.
+            //
+            // try {
+            //     let resultado = await service.registrar(formData);
+            // } catch (e) {
+            //     console.log(e)
+            // }
         }
 
         const carregaImg = () => {
@@ -169,7 +170,7 @@ const Componente = () => {
                 return;
             }
 
-            inputRefImageAnexo.style.display = "block";
+            inputRefImageAnexo.current.style.display = "block";
             inputRefImageAnexo.src = URL.createObjectURL(myFile);
             setImg(myFile)
 
@@ -213,7 +214,21 @@ const Componente = () => {
                 <form
                     className={classes.root}
                     autoComplete='off'
-                    onSubmit={(e) => {processaAbastecimento(e)}}
+                    onSubmit={e => {processaAbastecimento(e)
+                        // e.preventDefault();
+                        // if (!abastecimento.idPosto) {
+                        //     alert('Favor informar o posto');
+                        //     return;
+                        // }
+                        //
+                        // getConnection()
+                        //     .then(conn => save(conn, abastecimento))
+                        //     .then(() => {
+                        //         // alert('Registro efeituado com sucesso');
+                        //         reset();
+                        //     })
+                        //     .catch(error => alert(error));
+                    }}
                 >
                     <SelectPosto
                         value={abastecimento.idPosto}
@@ -281,14 +296,14 @@ const Componente = () => {
                         InputProps={{inputComponent: NumberFormat}}
                     />
                     <div className={classes.containerCanvas}>
-                        <canvas ref={inputRefSnapshot} className={classes.canvasImg}></canvas>
+                        <canvas id="snapshot" ref={inputRefSnapshot} className={classes.canvasImg}></canvas>
                         <img ref={inputRefImageAnexo} className={classes.imgAnexo} />
                     </div>
                     <Button
                         type='submit'
                         variant='contained'
                         color='primary'
-                        onClick={processaAbastecimento}
+                        // onClick={processaAbastecimento}
                     >
                         Registrar
                     </Button>
