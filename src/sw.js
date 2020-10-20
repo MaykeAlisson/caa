@@ -3,17 +3,6 @@ const cacheName = 'caa_cache_v';
 const cacheAtual = cacheName + versao;
 const swScriptUrl = new URL(self.location);
 
-function syncAttendees(){
-    return () => self.registration.showNotification(
-        `CAA - 35 abastecimentos salvos.`
-    )
-    // return update({ url: `https://reqres.in/api/users` })
-    //     .then(refresh)
-    //     .then((attendees) => self.registration.showNotification(
-    //         `${attendees.length} attendees to the PWA Workshop`
-    //     ))
-}
-
 // arquivos a ser salvo no cache
 const resourceToPrecache = [
     '/',
@@ -69,10 +58,3 @@ self.addEventListener('message', function(e) {
     }
 });
 
-
-self.addEventListener('sync', function(event) {
-    console.log("Caa - sync event", event);
-    if (event.tag === 'caaSync') {
-        event.waitUntil(syncAttendees()); // request salvar dados
-    }
-});

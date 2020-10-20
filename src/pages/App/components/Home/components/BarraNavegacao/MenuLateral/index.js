@@ -36,7 +36,9 @@ const Componente = ({
                     }}
                 />
                 <Divider style={{marginBottom: '10px'}}/>
-                <Menu/>
+                <Menu
+                    fecharMenu={() => {onFecharMenu();}}
+                />
             </div>
         </Drawer>
     );
